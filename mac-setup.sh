@@ -239,7 +239,7 @@ else
   echo "Vim already configured."
 fi
 
-echo "Generated password for $ADMIN_USER: $ADMIN_PASS"
+echo "Generated password for $ADMIN_USER: ${ADMIN_PASS:-}"
 echo "FileVault Recovery Personal Recovery Key (PRK):"
 sudo fdesetup list
 echo "✅ Setup completed successfully."
