@@ -212,5 +212,32 @@ defaults write us.zoom.xos CopyInviteLinkWhenStartingInstantMeeting -bool true
 # For good measure, kill Zoom if it's running (so it picks up new settings)
 osascript -e 'quit app "zoom.us"' 2>/dev/null || true
 
+# --- Configure Vim: restore cursor position & show status ---
+echo "Configuring Vim..."
+
+VIMRC="$HOME/.vimrc"
+
+# Only append if not already present
+if ! grep -q 'BufReadPost' "$VIMRC" 2>/dev/null; then
+  cat <<'EOF' >> "$VIMRC"
+
+" Restore cursor position when reopening files
+if has("autocmd")
+  autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   execute "normal! g`\"" |
+        \ endif
+endif
+
+" Show line and column number in status line
+set ruler
+
+EOF
+
+  echo "Vim configuration updated in $VIMRC"
+else
+  echo "Vim already configured."
+fi
+
 
 echo "✅ Setup completed successfully."
