@@ -51,7 +51,7 @@ sudo systemsetup -setremotelogin off
 ADMIN_USER="adminops"
 if ! id "$ADMIN_USER" &>/dev/null; then
     echo "Creating admin user '$ADMIN_USER' with a strong random password..."
-    ADMIN_PASS=$(LC_ALL=C tr -dc 'A-Za-z0-9!@#$%^&*()-_=+' </dev/urandom | head -c 20)
+    export ADMIN_PASS=$(LC_ALL=C tr -dc 'A-Za-z0-9!@#$%^&*()-_=+' </dev/urandom | head -c 20)
     echo "Generated password for $ADMIN_USER: $ADMIN_PASS"
     sudo sysadminctl -addUser "$ADMIN_USER" -fullName "Admin Ops" -password "$ADMIN_PASS" -admin
     echo "Admin user '$ADMIN_USER' created. Please save the password securely."
@@ -239,5 +239,7 @@ else
   echo "Vim already configured."
 fi
 
-
+echo "Generated password for $ADMIN_USER: $ADMIN_PASS"
+echo "FileVault Recovery Personal Recovery Key (PRK):"
+sudo fdesetup list
 echo "✅ Setup completed successfully."
