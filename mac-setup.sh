@@ -3,6 +3,19 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# --- Ensure /usr/local/bin is in PATH ---
+echo "Ensuring /usr/local/bin is in PATH..."
+
+for profile in ~/.bash_profile ~/.zprofile; do
+    if ! grep -q '/usr/local/bin' "$profile" 2>/dev/null; then
+        echo 'export PATH="/usr/local/bin:$PATH"' >> "$profile"
+        echo "Added to $profile"
+    fi
+done
+
+# Apply immediately for current session
+export PATH="/usr/local/bin:$PATH"
+
 ARCH=$(uname -m)
 echo "Detected architecture: $ARCH"
 
@@ -86,7 +99,7 @@ brew install --cask \
 echo "Installing CLI tools..."
 brew install \
     tfenv \
-    terraform \
+    wget \
     kubectl \
     helm \
     awscli \
@@ -107,6 +120,37 @@ echo "Applying final system preferences..."
 
 # Auto-lock after 5 min
 defaults -currentHost write com.apple.screensaver idleTime -int 300
+
+# --- Set Default Shell to Bash ---
+echo "Setting default shell to /bin/bash..."
+chsh -s /bin/bash
+
+# --- Maximize Keyboard Typing Speed ---
+echo "Setting fastest key repeat rate..."
+defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain InitialKeyRepeat -int 10
+
+# --- Show Bluetooth Icon in Menu Bar ---
+echo "Enabling Bluetooth icon in menu bar..."
+defaults write com.apple.controlcenter "Bluetooth" -int 18
+
+# --- Customize Dock ---
+echo "Customizing Dock (requires dockutil)..."
+brew install dockutil
+
+echo "Removing default Dock apps..."
+dockutil --remove all --no-restart
+
+echo "Adding custom apps to Dock..."
+dockutil --add "/Applications/Google Chrome.app" --no-restart
+dockutil --add "/Applications/Visual Studio Code.app" --no-restart
+dockutil --add "/Applications/zoom.us.app" --no-restart
+dockutil --add "/Applications/Slack.app" --no-restart
+dockutil --add "/Applications/WhatsApp.app" --no-restart
+dockutil --add "/Applications/KeePassXC.app"
+
+# Restart Dock to apply changes
+killall Dock
 
 # Enable automatic software updates
 sudo softwareupdate --schedule on
