@@ -172,4 +172,45 @@ done
 # Show FileVault status
 fdesetup status
 
+# --- Configure Chrome: Reopen Tabs on Startup ---
+echo "Configuring Chrome to restore tabs on startup..."
+
+CHROME_PREFS="$HOME/Library/Application Support/Google/Chrome/Default/Preferences"
+
+# Ensure Chrome preference file exists (launch Chrome briefly if needed)
+if [ ! -f "$CHROME_PREFS" ]; then
+    echo "Launching Chrome briefly to initialize preferences..."
+    open -a "Google Chrome"
+    sleep 5
+    osascript -e 'quit app "Google Chrome"'
+    sleep 2
+fi
+
+# Update the restore setting
+if [ -f "$CHROME_PREFS" ]; then
+    /usr/bin/plutil -replace session.restore_on_startup -integer 1 "$CHROME_PREFS" 2>/dev/null \
+        || /usr/bin/python3 -c "
+import json
+prefs = '$CHROME_PREFS'
+with open(prefs) as f: data = json.load(f)
+data['session'] = data.get('session', {})
+data['session']['restore_on_startup'] = 1
+with open(prefs, 'w') as f: json.dump(data, f, indent=2)
+"
+    echo "Chrome configured to restore tabs."
+else
+    echo "⚠️ Chrome preferences not found. Skipping restore-on-startup config."
+fi
+
+# --- Configure Zoom: Copy invite link on new meeting ---
+echo "Configuring Zoom to copy invite link on new meetings..."
+
+ZOOM_PREFS="$HOME/Library/Preferences/us.zoom.xos.plist"
+
+defaults write us.zoom.xos CopyInviteLinkWhenStartingInstantMeeting -bool true
+
+# For good measure, kill Zoom if it's running (so it picks up new settings)
+osascript -e 'quit app "zoom.us"' 2>/dev/null || true
+
+
 echo "✅ Setup completed successfully."
