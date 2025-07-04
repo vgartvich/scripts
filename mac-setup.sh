@@ -149,6 +149,10 @@ dockutil --add "/Applications/Slack.app" --no-restart
 dockutil --add "/Applications/WhatsApp.app" --no-restart
 dockutil --add "/Applications/KeePassXC.app"
 
+# --- Enable Dock Auto-Hide ---
+echo "Enabling automatic Dock hiding..."
+defaults write com.apple.dock autohide -bool true
+
 # Restart Dock to apply changes
 killall Dock
 
