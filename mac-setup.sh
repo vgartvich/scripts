@@ -127,8 +127,8 @@ chsh -s /bin/bash
 
 # --- Maximize Keyboard Typing Speed ---
 echo "Setting fastest key repeat rate..."
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # --- Show Bluetooth Icon in Menu Bar ---
 echo "Enabling Bluetooth icon in menu bar..."
