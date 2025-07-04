@@ -159,6 +159,16 @@ killall Dock
 # Enable automatic software updates
 sudo softwareupdate --schedule on
 
+# --- Ensure /opt/homebrew/bin is in PATH ---
+echo "Ensuring /opt/homebrew/bin is in PATH..."
+
+for profile in ~/.bash_profile ~/.zprofile; do
+    if ! grep -q '/opt/homebrew/bin' "$profile" 2>/dev/null; then
+        echo 'export PATH="/opt/homebrew/bin:$PATH"' >> "$profile"
+        echo "Added to $profile"
+    fi
+done
+
 # Show FileVault status
 fdesetup status
 
