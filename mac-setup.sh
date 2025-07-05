@@ -154,7 +154,7 @@ echo "Enabling automatic Dock hiding..."
 defaults write com.apple.dock autohide -bool true
 
 # Restart Dock to apply changes
-killall Dock
+# killall Dock
 
 # Enable automatic software updates
 sudo softwareupdate --schedule on
