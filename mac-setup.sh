@@ -134,6 +134,10 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 echo "Enabling Bluetooth icon in menu bar..."
 defaults write com.apple.controlcenter "Bluetooth" -int 18
 
+# --- Show Volume icon in menu bar ---
+echo "Enabling Volume (Sound) icon in menu bar..."
+defaults write com.apple.controlcenter "Sound" -int 18
+
 # --- Customize Dock ---
 echo "Customizing Dock (requires dockutil)..."
 brew install dockutil
