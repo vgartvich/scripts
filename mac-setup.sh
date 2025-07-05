@@ -212,6 +212,22 @@ defaults write us.zoom.xos CopyInviteLinkWhenStartingInstantMeeting -bool true
 # For good measure, kill Zoom if it's running (so it picks up new settings)
 osascript -e 'quit app "zoom.us"' 2>/dev/null || true
 
+# --- Trigger privacy prompts for Chrome, Zoom, Teams ---
+
+echo "Resetting TCC permissions for camera, mic, and screen (will prompt user on first use)..."
+
+for APP_BUNDLE in \
+    "com.google.Chrome" \
+    "us.zoom.xos" \
+    "com.microsoft.teams"; do
+
+  tccutil reset Camera "$APP_BUNDLE"
+  tccutil reset Microphone "$APP_BUNDLE"
+  tccutil reset ScreenCapture "$APP_BUNDLE"
+
+done
+
+
 # --- Configure Vim: restore cursor position & show status ---
 echo "Configuring Vim..."
 
